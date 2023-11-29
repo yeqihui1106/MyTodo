@@ -2,15 +2,11 @@ import Vue from 'vue'
 import App from './App.vue'
 import store from './store';
 import router from './router/index';
-import axios from 'axios';
+import $axios from './utils/require';
 // 创建一个自定义的Axios实例
-Vue.prototype.$axios = axios.create({
-  baseURL: 'http://localhost:5000',
-  headers: {
-    'Authorization': `Bearer ${localStorage.getItem("token")}`, // 添加令牌到请求头
-    // 'Content-Type': 'application/json' // 设置其他所需的请求头
-  }
-});
+Vue.prototype.$axios = $axios
+// 因为store中的this指向store实例对象，而不指向vue
+store.$axios = $axios
 Vue.config.productionTip = false;
 
 new Vue({

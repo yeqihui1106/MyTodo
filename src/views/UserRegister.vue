@@ -91,7 +91,10 @@ export default {
                             this.$message.error(response.data.message);
                         }
                     }).catch((err) => {
-                        console.error(err);
+                        this.$message({
+                            message: err.message,
+                            type: 'error'
+                        })
                     })
                 } else {
                     // 表单验证不通过

@@ -68,17 +68,28 @@ export default {
                     }).then((response) => {
                         if (response.data.status == 0) {
                             // 保存token到vuex，但是vuex非持久化
-                            this.$store.commit("saveToken", { token: response.data.token, avatar_path: response.data.avatar_path });
+                            // this.$store.commit("saveToken", { token: response.data.token, avatar_path: response.data.avatar_path });
+                            this.$store.commit("saveToken", response.data.token);
                             this.$message({
                                 message: '登录成功',
                                 type: 'success'
                             });
-                            this.$router.push("/home");
-                        } else { alert(response.data.message) }
-                    }).catch((err) => { console.error(err); })
+                            return this.$router.push("/home");
+                        } else {
+                            return this.$message({
+                                message: `${response.data.message}`,
+                                type: 'error'
+                            });
+                        }
+                    }).catch((err) => {
+                        this.$message({
+                            message: err.message,
+                            type: 'error'
+                        });
+                    })
                 } else {
                     // 表单验证不通过
-                    return false;
+                    return false
                 }
             });
         },

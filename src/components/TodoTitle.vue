@@ -6,7 +6,7 @@
             </p>
         </div>
         <div v-if="$store.state.token" class="userInfo">
-            <p>你好, {{ userinfo.username }} </p>
+            <p>你好, {{ username }} </p>
             <div class="avatar" @click="openChooseInp"><img :src="avatar_path" alt="用户头像"></div>
             <input type="file" ref="chooseImgInp" style="display: none;" @change="handleChooseImg($event)">
         </div>
@@ -32,8 +32,6 @@
 import Vue from 'vue';
 import { Avatar, Row, Col, Upload } from 'element-ui';
 import { mapState } from 'vuex';
-// 解析token
-import { jwtDecode } from 'jwt-decode';
 Vue.use(Row)
 Vue.use(Col)
 Vue.use(Avatar)
@@ -49,11 +47,11 @@ export default {
     computed: {
         ...mapState({
             // 解析出用户信息
-            userinfo: state => jwtDecode(state.token),
+            username: state => state.username,
             avatar_path: state => {
                 // vue不能动态绑定相对路径字符串,我们需要先require加载模块
                 if (state.avatar_path == "../assets/defaultAvatar.png") {
-                    return require("../assets/defaultAvatar.png")
+                    return require("../assets/defaultAvatar.png");
                 } else { return state.avatar_path }
             }
         }),
@@ -65,7 +63,7 @@ export default {
         },
         handleChooseImg(e) {
             // 获取用户选择的文件
-            const file = e.target.files[0]
+            const file = e.target.files[0];
             // 实例化一个空FormData对象 它能上传包含文件的表单数据
             const formData = new FormData();
             // 将文件添加到formData对象中，并命名为avatar，后端根据这个获取该文件
@@ -80,15 +78,14 @@ export default {
                     type: 'success'
                 });
             }).catch((err) => {
-                console.log("上传失败", err);
+                this.$message({
+                    message: `${err}`,
+                    type: 'error'
+                });
             });
         },
-        goLogin() {
-            this.$router.push("/login");
-        },
-        goRegister() {
-            this.$router.push("/register");
-        },
+        goLogin() { this.$router.push("/login") },
+        goRegister() { this.$router.push("/register") },
     },
 };
 </script>
